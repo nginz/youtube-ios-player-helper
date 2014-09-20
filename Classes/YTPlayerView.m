@@ -609,14 +609,26 @@ NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtub
   };
   NSMutableDictionary *playerParams = [[NSMutableDictionary alloc] init];
   [playerParams addEntriesFromDictionary:additionalPlayerParams];
-  [playerParams setValue:@"100%" forKey:@"height"];
-  [playerParams setValue:@"100%" forKey:@"width"];
-  [playerParams setValue:playerCallbacks forKey:@"events"];
-
+  
   // This must not be empty so we can render a '{}' in the output JSON
   if (![playerParams objectForKey:@"playerVars"]) {
     [playerParams setValue:[[NSDictionary alloc] init] forKey:@"playerVars"];
   }
+  NSDictionary *playerVars = [playerParams objectForKey:@"playerVars"];
+  NSString *playerHeight = @"100%";
+  NSString *playerWidth = @"100%";
+  if([playerVars objectForKey:@"height"]){
+      playerHeight = [playerVars objectForKey:@"height"];
+  }
+  if([playerVars objectForKey:@"width"]){
+      playerWidth = [playerVars objectForKey:@"width"];
+  }
+
+  [playerParams setValue:playerHeight forKey:@"height"];
+  [playerParams setValue:playerWidth forKey:@"width"];
+  [playerParams setValue:playerCallbacks forKey:@"events"];
+
+  
 
   // Remove the existing webView to reset any state
   [self.webView removeFromSuperview];
